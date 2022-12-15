@@ -25,10 +25,17 @@ export default function createRequestStorageAccess({
 }: OAuthStartOptions) {
   return function requestStorage(ctx: Context) {
     const {query} = ctx;
+    console.log('koa-shopify-auth createEnableCookies ==>', query);
     const shop = query.shop as string;
     const host = query.host as string;
-
-    if (shop == null) {
+    const decryptedHost = host
+      ? Buffer.from(host, 'base64').toString('ascii')
+      : '';
+    let decryptedShop = '';
+    if (decryptedHost?.length) {
+      decryptedShop = decryptedHost.split('/')[0];
+    }
+    if (shop == null && !decryptedShop?.length) {
       ctx.throw(400, Error.ShopParamMissing);
       return;
     }
@@ -48,10 +55,10 @@ export default function createRequestStorageAccess({
   <script>
     window.apiKey = "${Shopify.Context.API_KEY}";
     window.host = "${host}";
-    window.shopOrigin = "https://${encodeURIComponent(shop)}";
+    window.shopOrigin = "https://${encodeURIComponent(shop || decryptedShop)}";
     ${itpHelper}
     ${storageAccessHelper}
-    ${requestStorageAccess(shop, host, prefix)}
+    ${requestStorageAccess(shop || decryptedShop, host, prefix)}
   </script>
 </head>
 <body>

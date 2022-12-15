@@ -11,7 +11,7 @@ const query = querystring.stringify.bind(querystring);
 const baseUrl = 'myapp.com/auth';
 const shop = 'shop1.myshopify.io';
 const shopOrigin = 'https://shop1.myshopify.io';
-const host = 'this_is_definitely_a_host_string';
+const host = 'c2hvcDEubXlzaG9waWZ5LmlvL2FkbWlu';
 
 const baseConfig = {};
 
