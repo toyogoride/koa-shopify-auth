@@ -1,6 +1,6 @@
 {
-  "name": "@shopify/koa-shopify-auth",
-  "version": "5.0.3",
+  "name": "@goriderep/koa-shopify-auth",
+  "version": "5.0.4",
   "license": "MIT",
   "description": "Middleware to authenticate a Koa application with Shopify",
   "main": "dist/src/index.js",
@@ -20,12 +20,12 @@
   "author": "Shopify Inc.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Shopify/koa-shopify-auth.git"
+    "url": "git+https://github.com/toyogoride/koa-shopify-auth.git"
   },
   "bugs": {
-    "url": "https://github.com/Shopify/koa-shopify-auth/issues"
+    "url": "https://github.com/toyogoride/koa-shopify-auth/issues"
   },
-  "homepage": "https://github.com/Shopify/koa-shopify-auth/blob/master/README.md",
+  "homepage": "https://github.com/toyogoride/koa-shopify-auth/blob/master/README.md",
   "dependencies": {
     "@shopify/network": "^1.5.0",
     "@shopify/shopify-api": "^2.1.0",

@@ -22,9 +22,11 @@ export default function createEnableCookies({prefix}: OAuthStartOptions) {
     console.log('koa-shopify-auth createEnableCookies ==>', query);
     const shop = query.shop as string;
     const host = query.host as string;
-    const decryptedHost = Buffer.from(host, 'base64').toString('ascii');
+    const decryptedHost = host
+      ? Buffer.from(host, 'base64').toString('ascii')
+      : '';
     let decryptedShop = '';
-    if (decryptedHost?.length > 0) {
+    if (decryptedHost?.length) {
       decryptedShop = decryptedHost.split('/')[0];
     }
     if (shop == null && !decryptedShop?.length) {
