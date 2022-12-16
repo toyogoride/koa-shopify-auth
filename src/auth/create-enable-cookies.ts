@@ -48,6 +48,7 @@ export default function createEnableCookies({prefix}: OAuthStartOptions) {
       if (!emergencyShopParam?.length) {
         // A super hacky way to get the shop param from header's referer's params. Do not try this at home.
         const header = request?.header;
+        // referer: 'https://your-heroku-url.herokuapp.com/?embedded=1&hmac=HMAC&host=ENCRYPTED_HOST&locale=ja-JP&session=SESSION&shop=your-shop-url.myshopify.com&timestamp=1234567890'
         if (header?.referer) {
           const paramString = header?.referer.split('?')[1];
           const queryString = new URLSearchParams(paramString);
