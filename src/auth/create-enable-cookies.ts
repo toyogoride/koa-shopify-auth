@@ -19,7 +19,11 @@ const ACTION = 'Enable cookies';
 export default function createEnableCookies({prefix}: OAuthStartOptions) {
   return function enableCookies(ctx: Context) {
     const {query} = ctx;
-    console.log('koa-shopify-auth createEnableCookies ==>', {query});
+    console.log('koa-shopify-auth createEnableCookies ==>', {
+      prefix,
+      ctx,
+      query,
+    });
     const shop = query.shop as string;
     const host = query.host as string;
     const decryptedHost = host

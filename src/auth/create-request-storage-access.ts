@@ -25,7 +25,11 @@ export default function createRequestStorageAccess({
 }: OAuthStartOptions) {
   return function requestStorage(ctx: Context) {
     const {query} = ctx;
-    console.log('koa-shopify-auth createRequestStorageAccess ==>', {query});
+    console.log('koa-shopify-auth createRequestStorageAccess ==>', {
+      prefix,
+      ctx,
+      query,
+    });
     const shop = query.shop as string;
     const host = query.host as string;
     const decryptedHost = host
