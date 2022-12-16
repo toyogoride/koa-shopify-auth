@@ -38,7 +38,7 @@ export default function createRequestStorageAccess({
     if (shop == null && !decryptedShop?.length) {
       console.log(
         'koa-shopify-auth createRequestStorageAccess ctx.throw(400, Error.ShopParamMissing) ==>',
-        {shop, decryptedHost, decryptedShop},
+        {shop, host, decryptedHost, decryptedShop},
       );
       ctx.throw(400, Error.ShopParamMissing);
       return;
