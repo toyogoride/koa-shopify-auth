@@ -19,7 +19,7 @@ const ACTION = 'Enable cookies';
 export default function createEnableCookies({prefix}: OAuthStartOptions) {
   return function enableCookies(ctx: Context) {
     const {query} = ctx;
-    console.log('koa-shopify-auth createEnableCookies ==>', query);
+    console.log('koa-shopify-auth createEnableCookies ==>', {query});
     const shop = query.shop as string;
     const host = query.host as string;
     const decryptedHost = host
@@ -30,6 +30,10 @@ export default function createEnableCookies({prefix}: OAuthStartOptions) {
       decryptedShop = decryptedHost.split('/')[0];
     }
     if (shop == null && !decryptedShop?.length) {
+      console.log(
+        'koa-shopify-auth createEnableCookies ctx.throw(400, Error.ShopParamMissing) ==>',
+        {shop, decryptedHost, decryptedShop},
+      );
       ctx.throw(400, Error.ShopParamMissing);
       return;
     }
