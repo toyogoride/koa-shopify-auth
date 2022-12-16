@@ -1,3 +1,6 @@
+## What's the difference between this package and the official koa-shopify-auth?
+Once you updated your Shopify AppBridge to 3.x version, the app does kinda not support `koa-shopify-auth` anymore. While you might able to manage to make the app work, you might run into the problem "Expected A Valid Shop Query Parameter" once a day (refreshing the page will fix the problem, but it will come back again the next day). This is where this package taking place of the official one. This `koa-shopify-auth` will tries to get the shop param from somewhere else even when your backend doesn't send it during the auth process. The solution is quite hacky but it still works. You can check the GitHub repo for the difference.
+
 # DEPRECATED `@shopify/koa-shopify-auth`
 
 NOTE: this repo is no longer maintained. Prefer the [official Node API](https://github.com/Shopify/shopify-api-node).
