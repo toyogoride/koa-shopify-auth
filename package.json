@@ -1,6 +1,6 @@
 {
   "name": "@goriderep/koa-shopify-auth",
-  "version": "5.1.5",
+  "version": "5.1.6",
   "license": "MIT",
   "description": "Middleware to authenticate a Koa application with Shopify",
   "main": "dist/src/index.js",

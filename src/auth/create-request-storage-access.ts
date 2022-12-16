@@ -24,26 +24,53 @@ export default function createRequestStorageAccess({
   prefix,
 }: OAuthStartOptions) {
   return function requestStorage(ctx: Context) {
-    const {query} = ctx;
-    console.log('koa-shopify-auth createRequestStorageAccess ==>', {
-      prefix,
-      ctx,
-      header: ctx?.request?.header,
-      query,
-    });
+    const {query, request} = ctx;
+    console.log(
+      '[koa-shopify-auth/createRequestStorageAccess] requestStorage ==>',
+      {
+        prefix,
+        ctx,
+        header: request?.header,
+        query,
+      },
+    );
     const shop = query.shop as string;
     const host = query.host as string;
-    const decryptedHost = host
-      ? Buffer.from(host, 'base64').toString('ascii')
-      : '';
-    let decryptedShop = '';
-    if (decryptedHost?.length) {
-      decryptedShop = decryptedHost.split('/')[0];
+
+    let emergencyShopParam = '';
+    if (!shop) {
+      const decryptedHost = host
+        ? Buffer.from(host, 'base64').toString('ascii')
+        : '';
+
+      if (decryptedHost?.length) {
+        emergencyShopParam = decryptedHost.split('/')[0];
+        console.log(
+          '[koa-shopify-auth/createRequestStorageAccess] Fetch emergencyShopParam from host param ==>',
+          {decryptedHost, emergencyShopParam},
+        );
+      }
+
+      if (!emergencyShopParam?.length) {
+        // A super hacky way to get the shop param from header's referer's params.
+        const header = request?.header;
+        if (header?.referer) {
+          const paramString = header?.referer.split('?')[1];
+          const queryString = new URLSearchParams(paramString);
+
+          for (const pair of queryString.entries()) {
+            if (pair[0] === 'shop') {
+              emergencyShopParam = pair[1];
+            }
+          }
+        }
+      }
     }
-    if (shop == null && !decryptedShop?.length) {
+
+    if (shop == null && !emergencyShopParam?.length) {
       console.log(
-        'koa-shopify-auth createRequestStorageAccess ctx.throw(400, Error.ShopParamMissing) ==>',
-        {shop, host, decryptedHost, decryptedShop},
+        '[koa-shopify-auth/createRequestStorageAccess] ctx.throw(400, Error.ShopParamMissing) ==>',
+        {shop, host, emergencyShopParam},
       );
       ctx.throw(400, Error.ShopParamMissing);
       return;
@@ -64,10 +91,12 @@ export default function createRequestStorageAccess({
   <script>
     window.apiKey = "${Shopify.Context.API_KEY}";
     window.host = "${host}";
-    window.shopOrigin = "https://${encodeURIComponent(shop || decryptedShop)}";
+    window.shopOrigin = "https://${encodeURIComponent(
+      shop || emergencyShopParam,
+    )}";
     ${itpHelper}
     ${storageAccessHelper}
-    ${requestStorageAccess(shop || decryptedShop, host, prefix)}
+    ${requestStorageAccess(shop || emergencyShopParam, host, prefix)}
   </script>
 </head>
 <body>
