@@ -28,6 +28,7 @@ export default function createRequestStorageAccess({
     console.log('koa-shopify-auth createRequestStorageAccess ==>', {
       prefix,
       ctx,
+      header: ctx?.request?.header,
       query,
     });
     const shop = query.shop as string;
