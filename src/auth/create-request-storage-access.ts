@@ -25,34 +25,37 @@ export default function createRequestStorageAccess({
 }: OAuthStartOptions) {
   return function requestStorage(ctx: Context) {
     const {query, request} = ctx;
-    console.log(
-      '[koa-shopify-auth/createRequestStorageAccess] requestStorage ==>',
-      {
-        prefix,
-        ctx,
-        header: request?.header,
-        query,
-      },
-    );
+    // console.log(
+    //   '[koa-shopify-auth/createRequestStorageAccess] requestStorage ==>',
+    //   {
+    //     prefix,
+    //     ctx,
+    //     header: request?.header,
+    //     query,
+    //   },
+    // );
     const shop = query.shop as string;
     const host = query.host as string;
 
     let emergencyShopParam = '';
     if (!shop) {
-      const decryptedHost = host
-        ? Buffer.from(host, 'base64').toString('ascii')
-        : '';
-
-      if (decryptedHost?.length) {
-        emergencyShopParam = decryptedHost.split('/')[0];
-        console.log(
-          '[koa-shopify-auth/createRequestStorageAccess] Fetch emergencyShopParam from host param ==>',
-          {decryptedHost, emergencyShopParam},
-        );
+      // Try to get the shop value by decrypt the host param.
+      if (host) {
+        const decryptedHost = host
+          ? Buffer.from(host, 'base64').toString('ascii')
+          : '';
+        if (decryptedHost?.length) {
+          emergencyShopParam = decryptedHost.split('/')[0];
+          console.log(
+            '[koa-shopify-auth/createRequestStorageAccess] Fetch emergencyShopParam from host param ==>',
+            {decryptedHost, emergencyShopParam},
+          );
+        }
       }
 
+      // If the code above doesn't work, try this instead.
       if (!emergencyShopParam?.length) {
-        // A super hacky way to get the shop param from header's referer's params.
+        // A super hacky way to get the shop param from header's referer's params. Do not try this at home.
         const header = request?.header;
         if (header?.referer) {
           const paramString = header?.referer.split('?')[1];
@@ -61,6 +64,10 @@ export default function createRequestStorageAccess({
           for (const pair of queryString.entries()) {
             if (pair[0] === 'shop') {
               emergencyShopParam = pair[1];
+              console.log(
+                '[koa-shopify-auth/createRequestStorageAccess] Fetch emergencyShopParam from header.referer params ==>',
+                {referer: header?.referer, emergencyShopParam},
+              );
             }
           }
         }
@@ -70,7 +77,7 @@ export default function createRequestStorageAccess({
     if (shop == null && !emergencyShopParam?.length) {
       console.log(
         '[koa-shopify-auth/createRequestStorageAccess] ctx.throw(400, Error.ShopParamMissing) ==>',
-        {shop, host, emergencyShopParam},
+        {query, request},
       );
       ctx.throw(400, Error.ShopParamMissing);
       return;
