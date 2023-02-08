@@ -77,7 +77,10 @@ export function verifyToken(
           shop = payload.dest.replace('https://', '');
         }
       }
-
+      console.log('src/verify-request/verify-token.ts ==>', {
+        authRoute: routes.authRoute,
+        shop,
+      });
       if (shop) {
         ctx.response.set(REAUTH_URL_HEADER, `${routes.authRoute}?shop=${shop}`);
       }

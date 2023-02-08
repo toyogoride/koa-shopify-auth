@@ -62,6 +62,7 @@ const storageAccessHelper = `(function() {
         if(!this.secureIncompatible(navigator.userAgent)) {
           value += '; secure'
         }
+        console.log("src/auth/client/storage-access-helper.ts setCookie ==>", { value });
         document.cookie = value;
       }
 
@@ -69,6 +70,7 @@ const storageAccessHelper = `(function() {
         try {
           sessionStorage.setItem('shopify.granted_storage_access', true);
           this.setCookie('shopify.granted_storage_access=true');
+          console.log("src/auth/client/storage-access-helper.ts grantedStorageAccess ==>", { documentCookie: document.cookie });
           if (!document.cookie) {
             throw 'Cannot set third-party cookie.'
           }

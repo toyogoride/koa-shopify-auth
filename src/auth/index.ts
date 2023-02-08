@@ -72,6 +72,10 @@ export default function createShopifyAuth(options: OAuthStartOptions) {
       (ctx.path === oAuthStartPath && shouldPerformInlineOAuth(ctx))
     ) {
       const shop = ctx.query.shop as string;
+      console.log('src/auth/index.ts 1 ==>', {
+        shop: ctx.query.shop,
+        host: ctx.query.host,
+      });
       if (shop == null) {
         ctx.throw(400);
       }
@@ -89,11 +93,19 @@ export default function createShopifyAuth(options: OAuthStartOptions) {
     }
 
     if (ctx.path === oAuthStartPath) {
+      console.log('src/auth/index.ts 2 ==>', {
+        shop: ctx.query.shop,
+        host: ctx.query.host,
+      });
       await topLevelOAuthRedirect(ctx);
       return;
     }
 
     if (ctx.path === oAuthCallbackPath) {
+      console.log('src/auth/index.ts 3 ==>', {
+        shop: ctx.query.shop,
+        host: ctx.query.host,
+      });
       try {
         const authQuery: AuthQuery = {
           code: ctx.query.code as string,
@@ -121,6 +133,10 @@ export default function createShopifyAuth(options: OAuthStartOptions) {
           case e instanceof Shopify.Errors.CookieNotFound:
           case e instanceof Shopify.Errors.SessionNotFound:
             // This is likely because the OAuth session cookie expired before the merchant approved the request
+            console.log(
+              'src/auth/index.ts CookieNotFound || SessionNotFound ==>',
+              {e},
+            );
             ctx.redirect(`${oAuthStartPath}?shop=${ctx.query.shop}`);
             break;
           default:
@@ -132,6 +148,10 @@ export default function createShopifyAuth(options: OAuthStartOptions) {
     }
 
     if (ctx.path === enableCookiesPath) {
+      console.log('src/auth/index.ts 4 ==>', {
+        shop: ctx.query.shop,
+        host: ctx.query.host,
+      });
       await enableCookies(ctx);
       return;
     }
