@@ -25,39 +25,40 @@ export default function createRequestStorageAccess({
 }: OAuthStartOptions) {
   return function requestStorage(ctx: Context) {
     const {query, request} = ctx;
-    // console.log(
-    //   '[koa-shopify-auth/createRequestStorageAccess] requestStorage ==>',
-    //   {
-    //     prefix,
-    //     ctx,
-    //     header: request?.header,
-    //     query,
-    //   },
-    // );
+    console.log(
+      '[koa-shopify-auth/createRequestStorageAccess] requestStorage ==>',
+      {
+        prefix,
+        ctx,
+        header: request?.header,
+        query,
+      },
+    );
+
     const shop = query.shop as string;
     const host = query.host as string;
-    console.log('src/auth/create-request-storage-access.ts ==>', {shop, host});
+    // console.log('src/auth/create-request-storage-access.ts ==>', { shop, host });
     let emergencyShopParam = '';
     if (!shop) {
       // Try to get the shop value by decrypt the host param.
-      if (host) {
-        const decryptedHost = host
-          ? Buffer.from(host, 'base64').toString('ascii')
-          : '';
-        if (decryptedHost?.length) {
-          emergencyShopParam = decryptedHost.split('/')[0];
-          console.log(
-            '[koa-shopify-auth/createRequestStorageAccess] Fetch emergencyShopParam from host param ==>',
-            {decryptedHost, emergencyShopParam},
-          );
-        }
-      }
+      // if (host) {
+      //   const decryptedHost = host
+      //     ? Buffer.from(host, 'base64').toString('ascii')
+      //     : '';
+      //   if (decryptedHost?.length) {
+      //     emergencyShopParam = decryptedHost.split('/')[0];
+      //     console.log(
+      //       '[koa-shopify-auth/createRequestStorageAccess] Fetch emergencyShopParam from host param ==>',
+      //       {decryptedHost, emergencyShopParam},
+      //     );
+      //   }
+      // }
 
       // If the code above doesn't work, try this instead.
       if (!emergencyShopParam?.length) {
         // A super hacky way to get the shop param from header's referer's params. Do not try this at home.
         const header = request?.header;
-        console.log('src/auth/create-request-storage-access.ts ==>', {header});
+        // console.log('src/auth/create-request-storage-access.ts ==>', {header});
         // referer: 'https://your-heroku-url.herokuapp.com/?embedded=1&hmac=HMAC&host=ENCRYPTED_HOST&locale=ja-JP&session=SESSION&shop=your-shop-url.myshopify.com&timestamp=1234567890'
         if (header?.referer) {
           const paramString = header?.referer.split('?')[1];

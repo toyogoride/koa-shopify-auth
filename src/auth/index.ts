@@ -135,9 +135,10 @@ export default function createShopifyAuth(options: OAuthStartOptions) {
             // This is likely because the OAuth session cookie expired before the merchant approved the request
             console.log(
               'src/auth/index.ts CookieNotFound || SessionNotFound ==>',
-              {e},
             );
-            ctx.redirect(`${oAuthStartPath}?shop=${ctx.query.shop}`);
+            ctx.redirect(
+              `${oAuthStartPath}?shop=${ctx.query.shop}&host=${ctx.query.host}`,
+            );
             break;
           default:
             ctx.throw(500, e.message);
