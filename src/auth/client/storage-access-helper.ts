@@ -70,10 +70,10 @@ const storageAccessHelper = `(function() {
         try {
           sessionStorage.setItem('shopify.granted_storage_access', true);
           this.setCookie('shopify.granted_storage_access=true');
-          console.log("src/auth/client/storage-access-helper.ts grantedStorageAccess ==>", { document, documentCookie: document.cookie, sessionStorage });
-          // if (!document.cookie) {
-          //   throw 'Cannot set third-party cookie.'
-          // }
+          console.log("src/auth/client/storage-access-helper.ts grantedStorageAccess ==>", { documentCookie: document.cookie });
+          if (!document.cookie) {
+            throw 'Cannot set third-party cookie.'
+          }
           this.redirectToAppTargetUrl();
         } catch (error) {
           console.warn('Third party cookies may be blocked.', error);
