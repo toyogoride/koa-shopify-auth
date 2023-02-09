@@ -36,7 +36,7 @@ export default function createRequestStorageAccess({
     // );
     const shop = query.shop as string;
     const host = query.host as string;
-    console.log('src/auth/create-request-storage-access.ts ==>', {shop, host});
+
     let emergencyShopParam = '';
     if (!shop) {
       // Try to get the shop value by decrypt the host param.
@@ -57,7 +57,6 @@ export default function createRequestStorageAccess({
       if (!emergencyShopParam?.length) {
         // A super hacky way to get the shop param from header's referer's params. Do not try this at home.
         const header = request?.header;
-        console.log('src/auth/create-request-storage-access.ts ==>', {header});
         // referer: 'https://your-heroku-url.herokuapp.com/?embedded=1&hmac=HMAC&host=ENCRYPTED_HOST&locale=ja-JP&session=SESSION&shop=your-shop-url.myshopify.com&timestamp=1234567890'
         if (header?.referer) {
           const paramString = header?.referer.split('?')[1];
@@ -75,9 +74,7 @@ export default function createRequestStorageAccess({
         }
       }
     }
-    console.log('src/auth/create-request-storage-access.ts ==>', {
-      emergencyShopParam,
-    });
+
     if (shop == null && !emergencyShopParam?.length) {
       console.log(
         '[koa-shopify-auth/createRequestStorageAccess] ctx.throw(400, Error.ShopParamMissing) ==>',

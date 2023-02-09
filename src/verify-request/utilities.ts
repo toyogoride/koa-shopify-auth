@@ -13,7 +13,7 @@ export function redirectToAuth(
   const {
     query: {shop},
   } = ctx;
-  console.log('src/verify-request/utilities.ts ==>', {authRoute, shop});
+
   const routeForRedirect =
     shop == null ? fallbackRoute : `${authRoute}?shop=${shop}`;
 
